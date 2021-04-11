@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+  labels:
+    app: flask
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+      - name: flask-app
+        image: tiny-docker-python:latest
+        imagePullPolicy: Never
+        env:
+        - name: HOST
+          value: postgres-service
+        - name: NAME
+          value: postgres
+        - name: USER
+          valueFrom: 
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres-root-username
+        - name: PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres-root-password
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: flask-service
+spec:
+  selector:
+    app: flask
+  ports:
+  # Default port used by the image
+  - port: 8081
