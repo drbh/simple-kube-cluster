@@ -38,6 +38,11 @@ kubectl apply -f application/server.yaml -n space
 kubectl apply -f application/ingress.yaml -n space
 ```
 
+```bash
+kubectl rollout restart deployment flask-app -n space
+kubectl rollout restart deployment postgres-deployment -n space
+```
+
 remove all objects
 ```bash
 kubectl delete -f application/ingress.yaml -n space
@@ -88,4 +93,11 @@ kubectl logs -f pod/flask-app-8494744687-bk498 -n space
 ```bash
 # kubectl delete deployment flask-app -n space
 # docker exec -ti mycluster-control-plane crictl images
-```# simple-kube-cluster
+# simple-kube-cluster
+```
+
+## todo
+
+- local docker reg to test blue/green deployments of new containers
+- update routes for crud to show persistance
+- expand cluster to be multi node

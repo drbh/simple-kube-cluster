@@ -21,6 +21,8 @@ spec:
         ports:
         - containerPort: 5432
         env:
+        - name: PGDATA
+          value: /myfolder/
         - name: POSTGRES_USER
           valueFrom: 
             secretKeyRef:
@@ -31,6 +33,13 @@ spec:
             secretKeyRef:
               name: postgres-secret
               key: postgres-root-password
+        volumeMounts:
+        - name: example-persistent-storage
+          mountPath: /myfolder/
+      volumes:
+      - name: example-persistent-storage
+        persistentVolumeClaim:
+          claimName: ex-pv-claim
 ---
 apiVersion: v1
 kind: Service
